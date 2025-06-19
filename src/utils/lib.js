@@ -291,6 +291,11 @@ function toJson(obj) {
   return JSON.stringify(obj);
 }
 
+function removerAcentos(str) {
+  if (!str) return str;
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 export const lib = {
   config_id_integracao,
   config_modulo_server,
@@ -324,4 +329,5 @@ export const lib = {
   dateBrToIso8601,
   formatDate,
   toJson,
+  removerAcentos,
 };

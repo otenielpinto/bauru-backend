@@ -6,10 +6,6 @@ async function init() {
   await processarEstruturaPreco();
 }
 
-const ProdutoEstruturaPrecoController = {
-  init,
-};
-
 async function processarEstruturaPreco() {
   let precos = new Map();
 
@@ -72,9 +68,23 @@ async function processarEstruturaPreco() {
         row.sys_has_materia_prima_sem_custo !== sys_has_materia_prima_sem_custo;
 
       if (hasDiff) {
+        let precoVenda = row?.preco || 0;
+
+        let sys_markup_atual = 0;
+        let sys_margem_atual = 0;
+        let sys_novo_markup = 0;
+
+        if (precoVenda > 0 && sys_total_preco_custo > 0) {
+          sys_markup_atual = lib.round(precoVenda / sys_total_preco_custo);
+          sys_margem_atual = lib.round(precoVenda - sys_total_preco_custo);
+        }
+
         await produtoTinyRepository.update(row.id, {
           sys_total_preco_custo: sys_total_preco_custo,
           sys_has_materia_prima_sem_custo: sys_has_materia_prima_sem_custo,
+          sys_markup_atual: sys_markup_atual,
+          sys_margem_atual: sys_margem_atual,
+          sys_novo_markup: sys_novo_markup,
         });
         console.log(
           `Atualizado produto ${row.codigo} com custo total: ${sys_total_preco_custo}`
@@ -83,5 +93,9 @@ async function processarEstruturaPreco() {
     }
   }
 }
+
+const ProdutoEstruturaPrecoController = {
+  init,
+};
 
 export { ProdutoEstruturaPrecoController };
