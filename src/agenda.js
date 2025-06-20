@@ -6,6 +6,7 @@ import { ProdutoEstruturaFilaController } from "./controller/produtoEstruturaFil
 import { ProdutoEstruturaPrecoController } from "./controller/produtoEstruturaPrecoController.js";
 import { ProdutoTinyDetailController } from "./controller/produtoTinyDetailController.js";
 import { EmpresaController } from "./controller/empresaController.js";
+import { systemService } from "./services/systemService.js";
 import nodeSchedule from "node-schedule";
 
 global.processandoNow = 0;
@@ -20,6 +21,8 @@ async function task() {
   await ProdutoEstruturaFilaController.init();
   await ProdutoEstruturaPrecoController.init();
   await ProdutoTinyDetailController.init();
+  //essa data é mostrada no front-end
+  await systemService.started(1, "DatabaseUpdateTask");
 
   global.processandoNow = 0;
   console.log(" Job finished - task " + lib.currentDateTimeStr());
