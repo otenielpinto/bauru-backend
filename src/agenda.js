@@ -39,10 +39,9 @@ async function init() {
   //  await ProdutoTinyController.init();
   //  await ProdutoEstruturaController.init();
   //  await ProdutoEstruturaFilaController.init();
-  //  await ProdutoEstruturaPrecoController.init();
+  //await ProdutoEstruturaPrecoController.init();
   //  await ProdutoTinyDetailController.init();
-  //  console.log("Tarefa concluida - agenda " + lib.currentDateTimeStr());
-
+  // console.log("Tarefa concluida - agenda " + lib.currentDateTimeStr());
   //  return;
 
   try {

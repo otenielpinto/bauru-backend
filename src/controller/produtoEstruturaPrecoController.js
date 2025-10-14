@@ -32,6 +32,12 @@ async function processarEstruturaPreco() {
       let estrutura = row?.sys_estrutura_produto || [];
       let sys_total_preco_custo = 0;
       let sys_has_materia_prima_sem_custo = 0;
+      let precoVenda = row?.preco || 0;
+
+      let sys_markup_atual = 0;
+      let sys_margem_atual = 0;
+      let sys_novo_markup = 0;
+
       for (let e of estrutura) {
         let codigo = e?.item?.codigo || "";
         if (!codigo || codigo === "") {
@@ -63,17 +69,26 @@ async function processarEstruturaPreco() {
         sys_total_preco_custo += totalCusto;
       }
 
+      if (precoVenda > 0 && sys_total_preco_custo > 0) {
+        sys_markup_atual = lib.round(precoVenda / sys_total_preco_custo);
+        sys_margem_atual = lib.round(precoVenda - sys_total_preco_custo);
+      }
+
+      //Validacao 1
       let hasDiff =
-        row.sys_total_preco_custo !== sys_total_preco_custo ||
-        row.sys_has_materia_prima_sem_custo !== sys_has_materia_prima_sem_custo;
+        row?.sys_total_preco_custo !== sys_total_preco_custo ||
+        row?.sys_has_materia_prima_sem_custo !==
+          sys_has_materia_prima_sem_custo;
+
+      //Validacao 2
+      if (
+        row?.sys_markup_atual !== sys_markup_atual ||
+        row?.sys_margem_atual !== sys_margem_atual
+      ) {
+        hasDiff = true;
+      }
 
       if (hasDiff) {
-        let precoVenda = row?.preco || 0;
-
-        let sys_markup_atual = 0;
-        let sys_margem_atual = 0;
-        let sys_novo_markup = 0;
-
         if (precoVenda > 0 && sys_total_preco_custo > 0) {
           sys_markup_atual = lib.round(precoVenda / sys_total_preco_custo);
           sys_margem_atual = lib.round(precoVenda - sys_total_preco_custo);
